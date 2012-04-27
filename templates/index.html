@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>Request Late</title>
+</head>
+<body>
+<form method="POST" action="request">
+    {% csrf_token %}
+    Name: <input type="text" name="name" /><br />
+    Refrigerated: <input type="checkbox" name="refrigerated" /><br />
+    <input type="submit" value="Submit" />
+</form>
+
+Lates for {{ today }}:
+<ul>
+{% for late in todays_lates %}
+    <li>{{ late.name }} {% if late.refrigerated %}(Refrigerated){% else %}(Unrefrigerated){% endif %}</li>
+{% endfor %}
+</ul>
+</body>
+</html>
