@@ -10,9 +10,10 @@ class Command(NoArgsCommand):
     
     def handle_noargs(self, **options):
         todays_lates = Late.objects.filter(request_date=datetime.date.today())
+
         subject = 'Daily lates for ' + str(datetime.date.today())
         message = 'Lates for:\n' + '\n'.join([ l.name for l in todays_lates ])
         from_addr = 'Auto-Late <phulin@mit.edu>'
-        to_addrs = ['phulin@mit.edu']
+        to_addrs = ['tepco@mit.edu']
         send_mail(subject, message, from_addr, to_addrs, fail_silently=False)
         self.stdout.write('Email sent.\n')
