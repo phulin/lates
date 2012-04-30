@@ -1,10 +1,13 @@
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.template import RequestContext
 from lates.main.models import Late
-import datetime
+import datetime, json
+
+def todays_lates():
+    return Late.objects.filter(request_date=datetime.date.today())
 
 def request_late(request):
     late = Late(name=request.POST['name'], refrigerated=request.POST.get('refrigerated', False))
@@ -19,7 +22,16 @@ def request_late(request):
     return HttpResponseRedirect(reverse('lates.main.views.index'))
 
 def index(request):
-    todays_lates = Late.objects.filter(request_date=datetime.date.today())
-    context = {'today' : datetime.date.today(), 'todays_lates' : todays_lates}
+    context = {'today' : datetime.date.today(), 'todays_lates' : todays_lates()}
     return render_to_response('index.html', context,
                               context_instance=RequestContext(request))
+
+def stylesheet(request):
+    return render_to_response('style.css', {})
+
+def make_json(request):
+    lates_list = list()
+    for late in todays_lates():
+        lates_list.append({'name' : late.name,
+                           'refrigerated' : late.refrigerated})
+    return HttpResponse(json.dumps(lates_list))

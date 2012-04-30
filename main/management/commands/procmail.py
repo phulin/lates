@@ -12,10 +12,10 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         message = Parser().parse(sys.stdin)
 
-        if message['from'] == 'Auto-Late <phulin@mit.edu>': return
+        if 'Auto-Late' in message['from']: return
         if not ('tepco' in message['to'] or 'tep-haus-fud' in message['to']):
-            self.stderr.write('Not to tepco!\n')
-            return
+            self.stderr.write('Not to tepco: ' + message['to'] + '\n')
+            # return
         if message.is_multipart():
             contents = ''
             self.stderr.write('multipart!\n')

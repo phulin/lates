@@ -1,20 +1,38 @@
 <html>
 <head>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
 <title>Request Late</title>
+
 </head>
 <body>
-<form method="POST" action="request">
-    {% csrf_token %}
-    Name: <input type="text" name="name" /><br />
-    Refrigerated: <input type="checkbox" name="refrigerated" /><br />
-    <input type="submit" value="Submit" />
-</form>
 
-Lates for {{ today }}:
-<ul>
+<div id="late-list-container">
+<h1>Lates for {{ today }}</h1>
+{% if todays_lates %}
+<ul id="late-list">
 {% for late in todays_lates %}
-    <li>{{ late.name }} {% if late.refrigerated %}(Refrigerated){% else %}(Unrefrigerated){% endif %}</li>
+    <li class="late-item">
+        <span class="late-name">{{ late.name }}</span>
+        <span class="late-refrigerated">
+            {% if late.refrigerated %}Refrigerated{% else %}Unrefrigerated{% endif %}
+        </span>
+    </li>
 {% endfor %}
 </ul>
+{% else %}
+<div id="no-lates">No lates (yet) today!</div>
+{% endif %}
+
+<div id="request-container">
+<form method="POST" action="request" id="request">
+    {% csrf_token %}
+    Name: <input type="text" id="name" name="name" />
+    Refrigerated: <input type="checkbox" id="refrigerated" name="refrigerated" />
+    <input type="submit" id="refrigerated" value="Submit" />
+</form>
+</div>
+</div>
+
 </body>
 </html>
