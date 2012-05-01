@@ -26,11 +26,6 @@ def index(request):
     return render_to_response('index.html', context,
                               context_instance=RequestContext(request))
 
-def stylesheet(request):
-    return render_to_response('style.css', {})
-def behavior(request):
-    return render_to_response('behavior.js', {})
-
 def make_json(request):
     lates_list = list()
     for late in todays_lates():
