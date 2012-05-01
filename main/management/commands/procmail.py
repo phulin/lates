@@ -1,9 +1,10 @@
 from django.core.management.base import NoArgsCommand
 from lates.main.models import Late
 from email.parser import Parser
-import sys
+import sys, re
 
 # Automatically process late emails sent in through Procmail
+invalid = ['plate', 'be late', 'minutes late', 'late dinner', 'later', 'late notice', 'late by']
 
 class Command(NoArgsCommand):
     args = ''
@@ -30,12 +31,15 @@ class Command(NoArgsCommand):
         s = s.lower()
         sep = '\n' + '-' * 10 + '\n'
         # self.stderr.write(sep + s + sep)
-        if 'late' in s and not ('be late' in s or 'minutes late' in s or 'late dinner' in s or 'later' in s or 'late notice' in s or 'late by' in s):
+        s = '\n'.join(filter(lambda l: not l.startswith('>'), s.splitlines()))
+        if 'late' in s and not ('plate' in s or 'be late' in s or 'minutes late' in s or 'late dinner' in s or 'later' in s or 'late notice' in s or 'late by' in s):
             self.stderr.write('late email!\n')
             if 'dnr' in s or 'unrefrigerate' in s or 'not refrigerate' in s:
+                self.stderr.write('unrefrigeration detected\n')
                 refrigerated = False
             else:
                 refrigerated = True
             late = Late(name=message['from'], refrigerated=refrigerated)
             late.save()
-            self.stderr.write('  saved successfully we think!\n')
+            sep2 = '\n' + '-' * 20 + '\n'
+            self.stderr.write('  saved successfully we think!\n' + sep2)

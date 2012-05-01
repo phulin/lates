@@ -53,6 +53,7 @@ h1 {
 .late-refrigerated {
     font-style: italic;
     display: block;
+    float: left;
 }
 
 form {
@@ -63,4 +64,18 @@ form {
 #no-lates {
     font-size: 1.5em;
     margin-bottom: 12px;
+}
+
+.late-cancel {
+    display: block;
+    float: right;
+}
+
+.late-cancel a {
+    color: #80BBFF;
+    text-decoration: none;
+}
+
+.clear {
+    clear: both;
 }

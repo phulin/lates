@@ -12,11 +12,17 @@
 {% if todays_lates %}
 <ul id="late-list">
 {% for late in todays_lates %}
-    <li class="late-item">
+    <li class="late-item" id="late-{{ late.id }}">
         <span class="late-name">{{ late.name }}</span>
-        <span class="late-refrigerated">
-            {% if late.refrigerated %}Refrigerated{% else %}Unrefrigerated{% endif %}
-        </span>
+        <div class="late-properties">
+            <span class="late-refrigerated">
+                {% if late.refrigerated %}Refrigerated{% else %}Unrefrigerated{% endif %}
+            </span>
+            <span class="late-cancel">
+                <a href="cancel/{{ late.id }}" class="late-cancel-link">Cancel</a>
+            </span>
+        </div>
+        <div class="clear"></div>
     </li>
 {% endfor %}
 </ul>
@@ -33,6 +39,9 @@
 </form>
 </div>
 </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+<script src="behavior.js" type="text/javascript"></script>
 
 </body>
 </html>

@@ -28,6 +28,8 @@ def index(request):
 
 def stylesheet(request):
     return render_to_response('style.css', {})
+def behavior(request):
+    return render_to_response('behavior.js', {})
 
 def make_json(request):
     lates_list = list()
@@ -35,3 +37,18 @@ def make_json(request):
         lates_list.append({'name' : late.name,
                            'refrigerated' : late.refrigerated})
     return HttpResponse(json.dumps(lates_list))
+
+def cancel(request, id):
+    result = {'success' : False}
+    if request.method != 'DELETE':
+        return HttpResponse(json.dumps(result))
+
+    try:
+        late = Late.objects.get(id=int(id))
+        late.delete()
+    except e:
+        result['error'] = str(e)
+        return HttpResponse(json.dumps(result))
+
+    result['success'] = True
+    return HttpResponse(json.dumps(result))
