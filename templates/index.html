@@ -9,8 +9,7 @@
 
 <div id="late-list-container">
 <h1>Lates for {{ today }}</h1>
-{% if todays_lates %}
-<ul id="late-list">
+<ul id="late-list"{% if not todays_lates %} style="display: none;"{% endif %}>
 {% for late in todays_lates %}
     <li class="late-item" id="late-{{ late.id }}">
         <span class="late-name">{{ late.name }}</span>
@@ -19,23 +18,23 @@
                 {% if late.refrigerated %}Refrigerated{% else %}Unrefrigerated{% endif %}
             </span>
             <span class="late-cancel">
-                <a href="cancel/{{ late.id }}" class="late-cancel-link">Cancel</a>
+                <a href="{{ late.id }}" class="late-cancel-link">Cancel</a>
             </span>
         </div>
         <div class="clear"></div>
     </li>
 {% endfor %}
 </ul>
-{% else %}
-<div id="no-lates">No lates (yet) today!</div>
-{% endif %}
+<div id="no-lates"{% if todays_lates %}style="display: none;"{% endif %}>
+    No lates (yet) today!
+</div>
 
 <div id="request-container">
 <form method="POST" action="request" id="request">
     {% csrf_token %}
     Name: <input type="text" id="name" name="name" />
     Refrigerated: <input type="checkbox" id="refrigerated" name="refrigerated" />
-    <input type="submit" id="refrigerated" value="Submit" />
+    <input type="submit" id="request-submit" value="Submit" />
 </form>
 </div>
 </div>

@@ -11,3 +11,17 @@ class Late(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def refrigerated_str(self):
+        if self.refrigerated:
+            return 'Refrigerated'
+        else:
+            return 'Unrefrigerated'
+
+    def readable(self):
+        return '%s (%s)' % (self.name, self.refrigerated_str())
+
+    def to_dict(self):
+        return {'id' : self.id,
+                'name' : self.name,
+                'refrigerated' : self.refrigerated}

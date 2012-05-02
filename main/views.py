@@ -7,7 +7,7 @@ from lates.main.models import Late
 import datetime, json
 
 def todays_lates():
-    return Late.objects.filter(request_date=datetime.date.today())
+    return Late.objects.filter(request_date=datetime.date.today()).order_by('id');
 
 def request_late(request):
     late = Late(name=request.POST['name'], refrigerated=request.POST.get('refrigerated', False))
@@ -19,7 +19,7 @@ def request_late(request):
     to_addrs = ['tepco@mit.edu']
     # send_mail(subject, message, from_addr, to_addrs, fail_silently=False)
 
-    return HttpResponseRedirect(reverse('lates.main.views.index'))
+    return HttpResponse(json.dumps(late.to_dict()))
 
 def index(request):
     context = {'today' : datetime.date.today(), 'todays_lates' : todays_lates()}
@@ -27,16 +27,12 @@ def index(request):
                               context_instance=RequestContext(request))
 
 def make_json(request):
-    lates_list = list()
-    for late in todays_lates():
-        lates_list.append({'name' : late.name,
-                           'refrigerated' : late.refrigerated})
-    return HttpResponse(json.dumps(lates_list))
+    return HttpResponse(json.dumps([late.to_dict() for late in todays_lates()]))
 
 def cancel(request, id):
     result = {'success' : False}
     if request.method != 'DELETE':
-        return HttpResponse(json.dumps(result))
+        return HttpResponse(status=501)
 
     try:
         late = Late.objects.get(id=int(id))
