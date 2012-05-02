@@ -4,10 +4,10 @@ $(document).ready(function() {
     $("#request-submit").click(function(e) {
         e.preventDefault();
 
+        var haveLates = ($("#no-lates").css("display") == "none");
         $.post("request",
             $("#request").serialize(),
             function(data, textStatus, jqXHR) {
-                var haveLates = ($("#no-lates").css("display") == "none");
                 if (!haveLates) {
                     $("#late-list").show();
                     $("#no-lates").hide();
